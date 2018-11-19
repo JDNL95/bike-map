@@ -1,13 +1,22 @@
 <html>
 <head>
     <title> WebMap</title>
-    <link rel="stylesheet" href= "https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+
+    <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+
+    <style>#map { width: 100%; height: 100%; }
+     .border { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
+     .legend { text-align: left; line-height: 20px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }</style>
+
 </head>
 
 <body>
 
-    <div id="mapid" style="height:100%;"></div>
+    <div id="map"></div>
 
     <script type="text/javascript" src="bikeracks.geojson"></script>
     <script type="text/javascript" src="on_street_bike_parking.geojson"></script>
@@ -17,7 +26,7 @@
     <script type="text/javascript">
    
     // intialize map with Toronto as focal point
-    var map = L.map('mapid').setView([43.6532, -79.3832], 13);
+    var map = L.map('map').setView([43.6532, -79.3832], 13);
 
     // map tile layer (openstreet map)
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -66,6 +75,24 @@
         pointToLayer: function (feature,latlng){
             return L.marker (latlng, {icon:rackIcon});
         }}).addTo(map);
+
+    //Legend
+
+    var legend = L.control({position: "bottomright"});
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "border legend"),
+        grades = ["Indoor Parking ", "Outdoor Shelter ", "Bike Racks "],
+        symbol = ["indoor.png", "shelter.jpg", "bike_racks.png"];
+
+        for (var i = 0; i < grades.length; i++){
+            div.innerHTML +=
+                (" <img src="+ symbol[i] +" height='20' width='20'>")+ " " + grades[i] +'<br>';
+        }
+
+        return div;
+    };
+
+    legend.addTo(map)
 
 
     </script>
