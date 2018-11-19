@@ -10,6 +10,9 @@
     <div id="mapid" style="height:100%;"></div>
 
     <script type="text/javascript" src="bikeracks.geojson"></script>
+    <script type="text/javascript" src="on_street_bike_parking.geojson"></script>
+    <script type="text/javascript" src="indoor_bike_station.geojson"></script>
+
 
     <script type="text/javascript">
    
@@ -24,8 +27,46 @@
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 		id: 'mapbox.streets'
 	}).addTo(map);
+
+    //Symbols
+    var rackIcon = L.icon({
+        iconUrl: "bike_racks.png",
+        iconSize: [20,20],
+        iconAnchor: [16,37],
+        popupAnchor: [0,-28]
+    });
+
+    var indoorIcon = L.icon({
+        iconUrl: "indoor.png",
+        iconSize: [20,20],
+        iconAnchor: [16,37],
+        popupAnchor: [0,-28]
+    });
+
+    var shelterIcon = L.icon({
+        iconUrl: "shelter.jpg",
+        iconSize: [20,20],
+        iconAnchor: [16,37],
+        popupAnchor: [0,-28]
+    });
+
+
+    // geojson layers 
+    L.geoJson(indoorParking,{
+        pointToLayer: function (feature,latlng){
+            return L.marker (latlng, {icon:indoorIcon});
+        }}).addTo(map);
+
+    L.geoJson(streetParking,{
+        pointToLayer: function (feature,latlng){
+            return L.marker (latlng, {icon:shelterIcon});
+        }}).addTo(map);
     
-    L.geoJson(bikerack).addTo(map);
+    L.geoJson(bikerack,{
+        pointToLayer: function (feature,latlng){
+            return L.marker (latlng, {icon:rackIcon});
+        }}).addTo(map);
+
 
     </script>
 </body>

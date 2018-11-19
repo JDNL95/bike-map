@@ -1,0 +1,9 @@
+var indoorParking = {
+"type": "FeatureCollection",
+"name": "indoor_bike_station",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "ADDRESS": "25 York St", "X": 314335.65, "Y": 4833524.225, "LONGITUDE": -79.381608639700005, "LATITUDE": 43.6435976446, "TYPE": "Bicycle Station", "TRANSIT_ST": "Union Station", "FLANKING": "York St", "BIC_CAPCIT": 120, "CHANGE_RM": "Yes", "VEND_MACH": "Yes", "TOOLS_PUMP": "Yes", "YR_INSTALL": 2009, "OBJECTID": 1 }, "geometry": { "type": "Point", "coordinates": [ -79.38161, 43.6436 ] } },
+{ "type": "Feature", "properties": { "ADDRESS": "777 Victoria Park Ave", "X": 321774.235, "Y": 4839135.943, "LONGITUDE": -79.289230078599999, "LATITUDE": 43.693977922800002, "TYPE": "Bicycle Station", "TRANSIT_ST": "Victoria Park Station", "FLANKING": "Victoria Park Ave", "BIC_CAPCIT": 52, "CHANGE_RM": "No", "VEND_MACH": "No", "TOOLS_PUMP": "No", "YR_INSTALL": 2012, "OBJECTID": 2 }, "geometry": { "type": "Point", "coordinates": [ -79.28923, 43.69398 ] } }
+]
+}
