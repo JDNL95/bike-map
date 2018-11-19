@@ -1,0 +1,22 @@
+{
+  "name": "webmap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JDNL95/webmap.git"
+  },
+  "author": "JDNL95",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JDNL95/webmap/issues"
+  },
+  "homepage": "https://github.com/JDNL95/webmap#readme",
+  "dependencies": {
+    "leaflet": "^1.3.4"
+  }
+}
