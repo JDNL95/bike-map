@@ -8,9 +8,17 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
 
-    <style>#map { width: 100%; height: 100%; }
-     .border { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } .info h4 { margin: 0 0 5px; color: #777; }
-     .legend { text-align: left; line-height: 20px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }</style>
+    <style>
+    /* map style */
+    #map { width: 100%; height: 100%; }
+    /* circle symbol style */
+    .legend .circle {border-radius: 50%; width: 10px; height: 10px;margin-left: 4px; margin-top: 3px;}
+    /* border style */
+    .border { padding: 6px 8px; font: 14px/16px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; } 
+    /* info style */
+    .info h4 { margin: 0 0 5px; color: #777; }
+    /* legend style */
+    .legend { text-align: left; line-height: 20px; color: #555; } .legend i { width: 18px; height: 18px; float: left; margin-right: 8px; opacity: 0.7; }</style>
 
 </head>
 
@@ -18,10 +26,12 @@
 
     <div id="map"></div>
 
+    <!-- Access geojson files -->
     <script type="text/javascript" src="bikeracks.geojson"></script>
     <script type="text/javascript" src="on_street_bike_parking.geojson"></script>
     <script type="text/javascript" src="indoor_bike_station.geojson"></script>
-
+    <script type="text/javascript" src="bikelanes.geojson"></script>
+    <script type="text/javascript" src="cycleTracks.geojson"></script>
 
     <script type="text/javascript">
    
@@ -37,7 +47,7 @@
 		id: 'mapbox.streets'
 	}).addTo(map);
 
-    //Symbols
+    //Symbols images setting
     var rackIcon = L.icon({
         iconUrl: "bike_racks.png",
         iconSize: [20,20],
@@ -59,8 +69,31 @@
         popupAnchor: [0,-28]
     });
 
+    //set color function
+    function getColor(d) {
+        return d === "Bike Lane" ? "#FF0000":
+               d === "Cycle Track" ? "#0000FF":
+               "#0000FF";
+    }
 
-    // geojson layers 
+    //line styles
+    var redline = {
+        "color" : "#FF0000",
+        "weight" : 1,
+        "opacity" : 1
+    };
+
+    var blueline = {
+        "color" : "#0000FF",
+        "weight" : 1,
+        "opacity" : 1
+    }
+
+    // add geojson layers with symbols 
+
+    L.geoJson(cycle, {style:blueline}).addTo(map);
+    L.geoJson(lanes, {style:redline}).addTo(map);
+
     L.geoJson(indoorParking,{
         pointToLayer: function (feature,latlng){
             return L.marker (latlng, {icon:indoorIcon});
@@ -76,18 +109,31 @@
             return L.marker (latlng, {icon:rackIcon});
         }}).addTo(map);
 
-    //Legend
+    //Create legend
 
     var legend = L.control({position: "bottomright"});
     legend.onAdd = function (map) {
         var div = L.DomUtil.create("div", "border legend"),
+        labels = ["<strong>Legend</strong>"]
         grades = ["Indoor Parking ", "Outdoor Shelter ", "Bike Racks "],
+        linelabel = ["Bike Lane", "Cycle Track"]
         symbol = ["indoor.png", "shelter.jpg", "bike_racks.png"];
+
+        for (var x = 0; x < linelabel.length; x++) {
+
+            div.innerHTML += 
+                labels.push(
+                '<i class = "circle" style="background:' + getColor(linelabel[x]) + '"></i> ' +
+                (linelabel[x] ? linelabel[x] : '+'));
+        }
 
         for (var i = 0; i < grades.length; i++){
             div.innerHTML +=
-                (" <img src="+ symbol[i] +" height='20' width='20'>")+ " " + grades[i] +'<br>';
+            labels.push(
+                (" <img src="+ symbol[i] +" height='20' width='20'>")+ " " + grades[i]);
         }
+
+        div.innerHTML = labels.join('<br>');
 
         return div;
     };
