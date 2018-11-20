@@ -104,23 +104,51 @@
 
     // add geojson layers with symbols 
 
-    L.geoJson(cycle, {style:greyline}).addTo(map);
-    L.geoJson(lanes, {style:blackline}).addTo(map);
+    var cycletracklayer = L.geoJson(cycle, {onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');}, 
+        style:greyline}).addTo(map);
+    var bikelaneslayer = L.geoJson(lanes, {onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},style:blackline}).addTo(map);
 
-    L.geoJson(indoorParking,{
+    var indoorparkinglayer = L.geoJson(indoorParking,{onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');}, 
         pointToLayer: function (feature,latlng){
             return L.marker (latlng, {icon:indoorIcon});
         }}).addTo(map);
 
-    L.geoJson(streetParking,{
+    var streetparkinglayer = L.geoJson(streetParking,{onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},
         pointToLayer: function (feature,latlng){
             return L.marker (latlng, {icon:shelterIcon});
         }}).addTo(map);
     
-    L.geoJson(bikerack,{
+    var bikeracklayer = L.geoJson(bikerack,{onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},
         pointToLayer: function (feature,latlng){
             return L.marker (latlng, {icon:rackIcon});
         }}).addTo(map);
+
+    //combine all data into one layer
+    var alllayers = L.layerGroup();
+    L.geoJson(cycle, {onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},style:greyline}).addTo(alllayers);
+    L.geoJson(lanes, {onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},style:blackline}).addTo(alllayers);
+    L.geoJson(indoorParking,{onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},
+        pointToLayer: function (feature,latlng){
+            return L.marker (latlng, {icon:indoorIcon});
+        }}).addTo(alllayers);
+    L.geoJson(streetParking,{onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},
+        pointToLayer: function (feature,latlng){
+            return L.marker (latlng, {icon:shelterIcon});
+        }}).addTo(alllayers);
+    L.geoJson(bikerack,{onEachFeature: function(f,l)
+        {l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');},
+        pointToLayer: function (feature,latlng){
+            return L.marker (latlng, {icon:rackIcon});
+        }}).addTo(alllayers);
 
     //Create legend
 
@@ -130,7 +158,7 @@
         labels = ["<strong>Legend</strong>"]
         grades = ["Indoor Parking ", "Outdoor Shelter ", "Bike Racks "],
         linelabel = ["Bike Lane", "Cycle Track"]
-        symbol = ["indoor.png", "shelter.jpg", "bike_racks.png"];
+        symbol = ["indoor.png", "shelter.png", "bike_racks.png"];
 
         for (var x = 0; x < linelabel.length; x++) {
 
@@ -152,6 +180,19 @@
     };
 
     legend.addTo(map)
+
+    //layer control
+
+    var overlays = {
+        "All Layers" : alllayers,
+        "Bike Lane" : bikelaneslayer,
+        "Cycle Track" : cycletracklayer,
+        "Indoor Parking" : indoorparkinglayer,
+        "Outdoor Shelter" : streetparkinglayer,
+        "Bike Racks" : bikeracklayer
+    };
+
+    L.control.layers(overlays).addTo(map);
 
     //geolocation of current device
     map.locate({setView: true, maxZoom: 16});
