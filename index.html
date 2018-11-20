@@ -84,28 +84,28 @@
 
     //set color function
     function getColor(d) {
-        return d === "Bike Lane" ? "#FF0000":
-               d === "Cycle Track" ? "#0000FF":
-               "#0000FF";
+        return d === "Bike Lane" ? "#0C090A":
+               d === "Cycle Track" ? "#736F6E":
+               "#736F6E";
     }
 
     //line styles
-    var redline = {
-        "color" : "#FF0000",
+    var blackline = {
+        "color" : "#0C090A",
         "weight" : 1,
         "opacity" : 1
     };
 
-    var blueline = {
-        "color" : "#0000FF",
+    var greyline = {
+        "color" : "#736F6E",
         "weight" : 1,
         "opacity" : 1
     }
 
     // add geojson layers with symbols 
 
-    L.geoJson(cycle, {style:blueline}).addTo(map);
-    L.geoJson(lanes, {style:redline}).addTo(map);
+    L.geoJson(cycle, {style:greyline}).addTo(map);
+    L.geoJson(lanes, {style:blackline}).addTo(map);
 
     L.geoJson(indoorParking,{
         pointToLayer: function (feature,latlng){
